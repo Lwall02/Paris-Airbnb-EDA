@@ -1,0 +1,20 @@
+---
+title: "Paris Airbnb EDA"
+format: html
+editor: visual
+---
+
+## Paris Airbnb EDA
+
+First we need to download the data.
+We do this from http://insideairbnb.com/, "Data," "Get the Data," and scrolling down to Paris.
+I use the  "listings.csv" data set saved as a link for a table of the complete Airbnb listings information.
+
+```{r}
+airbnb_data <-
+  read_csv("http://data.insideairbnb.com/france/ile-de-france/paris/2023-12-12/visualisations/listings.csv")
+
+write_csv(airbnb_data, "airbnb_paris_data.csv")
+
+```
+
