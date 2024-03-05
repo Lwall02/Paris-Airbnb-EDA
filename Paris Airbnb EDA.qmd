@@ -4,17 +4,377 @@ format: html
 editor: visual
 ---
 
-## Paris Airbnb EDA
+## Introduction
 
-First we need to download the data.
-We do this from http://insideairbnb.com/, "Data," "Get the Data," and scrolling down to Paris.
-I use the  "listings.csv" data set saved as a link for a table of the complete Airbnb listings information.
+This is a Quarto document exploring information on the Airbnb's in Paris, France. The code in this document uses R programming and uses considerable amounts of advice and code suggestions from the 'Telling Stories With Data' by Rohan Alexander.
 
 ```{r}
+#| echo: false
+#| warning: false
+
+library(tidyverse)
+library(naniar)
+library(janitor)
+library(modelsummary)
+library(kableExtra)
+```
+
+## Paris Airbnb EDA
+
+First we need to download the data. We do this from http://insideairbnb.com/, "Data," "Get the Data," and scrolling down to Paris. I use the "Detailed Listings data" data set saved as a link.
+
+```{r}
+#| echo: false
+#| warning: false
+#| include: false
+
+
 airbnb_data <-
-  read_csv("http://data.insideairbnb.com/france/ile-de-france/paris/2023-12-12/visualisations/listings.csv")
+  read_csv("http://data.insideairbnb.com/france/ile-de-france/paris/2023-12-12/data/listings.csv.gz")
 
 write_csv(airbnb_data, "airbnb_paris_data.csv")
 
+airbnb_data_selected <-
+  airbnb_data |>
+  select(
+    host_id,
+    host_response_time,
+    host_is_superhost,
+    host_total_listings_count,
+    neighbourhood_cleansed,
+    bathrooms,
+    bedrooms,
+    price,
+    number_of_reviews,
+    review_scores_rating,
+    review_scores_accuracy,
+    review_scores_value
+  )
 ```
 
+First we notice the prices were incorrectly determined to be characters and turn them into numbers. Next, we can examine the distribution of the price. 
+```{r}
+#| echo: false
+#| warning: false
+#| include: true
+#| label: fig-pricedist
+#| fig-cap: "Distribution of the Paris Airbnb Prices"
+#| fig-subcap: ["Distribution of untouched prices","Same distribution using the "]
+#| layout-ncol: 2
+
+airbnb_data_selected <-
+  airbnb_data_selected |>
+  mutate(
+    price = str_remove_all(price, "[\\$,]"),
+    price = as.integer(price)
+  )
+
+airbnb_data_selected |>
+  ggplot(aes(x = price)) +
+  geom_histogram(binwidth = 10) +
+  theme_classic() +
+  labs(
+    x = "Price per night",
+    y = "Number of properties"
+  )
+
+airbnb_data_selected |>
+  filter(price > 1000) |>
+  ggplot(aes(x = price)) +
+  geom_histogram(binwidth = 10) +
+  theme_classic() +
+  labs(
+    x = "Price per night",
+    y = "Number of properties"
+  ) +
+  scale_y_log10()
+
+```
+```{r}
+#| echo: false
+#| warning: false
+#| include: true
+#| label: fig-pricedist2
+#| fig-cap: "Distribution of the Paris Airbnb Prices under $1000"
+#| fig-subcap: ["Distribution of prices under $1000","A closer look at the prices between $90 and $210 showing the groupiing of common price tactics."]
+#| layout-ncol: 2
+
+airbnb_data_selected |>
+  filter(price < 1000) |>
+  ggplot(aes(x = price)) +
+  geom_histogram(binwidth = 10) +
+  theme_classic() +
+  labs(
+    x = "Price per night",
+    y = "Number of properties"
+  )
+
+airbnb_data_selected |>
+  filter(price > 90) |>
+  filter(price < 210) |>
+  ggplot(aes(x = price)) +
+  geom_histogram(binwidth = 1) +
+  theme_classic() +
+  labs(
+    x = "Price per night",
+    y = "Number of properties"
+  )
+
+```
+
+As we can the distribution of prices, @fig-pricedist, is similar to what we would expect of this type of data set. We can see over all the entries, a very large portion of the prices are below \$1000 with some outliers going up to around \$80000. As we look closer the distribution of prices, below \$1000 in @fig-distprice2, they fall into a normally, right-skewed distribution. Further, the prices display a peak around the prices ending in zero and five. This is representative of normal grouping of prices based in order to attract customers.
+
+Now we will look at the date range and see how many rows have a value.
+```{r}
+#| echo: false
+#| warning: false
+#| include: true
+#| label: tbl-dates
+#| fig-cap: "Number of Dates as NA"
+
+airbnb_data_dates <- 
+  airbnb_data |>
+  filter(!is.na(first_review)) |>
+  select(first_review, last_review) |>
+  mutate(
+    first_review = as.Date(airbnb_data_dates$first_review),
+    last_review = as.Date(airbnb_data_dates$last_review)
+    ) 
+
+first_date <- min(airbnb_data_dates$first_review)
+second_date <- max(airbnb_data_dates$last_review)
+
+
+airbnb_data |>
+  filter(is.na(first_review)) |>
+  nrow() |>
+  kable(col.names = "Number of Dates Inputted as NA")
+```
+This data set spans over 14 years from first listed review in May of 2009 to the last listed review in December in 2023. Unfortunately, there is 17,891 [@tbl-dates] entries with NA for any variable of a date type, which is almost 25% of the entire data set.
+
+Now we will examine the super host status. We can see there are 90 rows with a value of NA for reviews variables, whereas the rest are correctly inputted as Boolean values. This is almost nothing compared to the 74,329 entries. Further, we can add a column where instead of TRUE/FALSE we have 0/1. Now we have only rows where there is information about super host status, @tbl-superhost1.
+
+```{r}
+#| echo: false
+#| warning: false
+#| include: true
+#| label: tbl-superhost1
+#| fig-cap: "All Listings Where Superhost is Correctly Inputted"
+#| fig-subcap: ["The last column displays a binary varibale, 0/1 for not Superhost or Superhost. There are 74,239 entries here."]
+
+number_na_superhost <- airbnb_data_selected |>
+  filter(!is.na(host_is_superhost)) |>
+  nrow()
+
+airbnb_data_no_superhost_nas <-
+  airbnb_data_selected |>
+  filter(!is.na(host_is_superhost)) |>
+  mutate(
+    host_is_superhost_binary =
+      as.numeric(host_is_superhost)
+  )
+
+airbnb_data_no_superhost_nas |>
+  head()
+```
+
+In order to further examine the reviews for the listed Airbnb's we will have to ignore those reviews with NA entries. Those rows with no entries in the first_review or last_review also have no entries for any review variables. This means to examine the reviews of the listings we would have to ignore close to 25% of the entries since they are listed as NA under any review variable.
+```{r}
+#| echo: false
+#| warning: false
+#| include: true
+#| label: tbl-review1
+#| fig-cap: "The Review Rating For All Entries With Reviews"
+#| fig-subcap: ["This displays all the reviews from 0.0 to 5.0 of the listings with reviews. There are roughly 25% of the entries without reviews missing."]
+
+airbnb_data_has_reviews <-
+  airbnb_data_no_superhost_nas |>
+  filter(!is.na(review_scores_rating))
+
+airbnb_data_has_reviews |>
+  ggplot(aes(x = review_scores_rating)) +
+  geom_histogram(binwidth = 1) +
+  theme_classic() +
+  labs(
+    x = "Average review score",
+    y = "Number of properties"
+  )
+```
+Upon looking at those listings with reviews in @tbl-review1, a very large portion of the reviews fall into the high 4's and 5.0 ratings.
+
+We may be also interested in the relationship between being a super host and other factors. Perhaps response time plays a large role so we look at this closer. First we notice the more than 20,000 NAs are incorrectly inputted as N/A which R does not recognize.
+
+```{r}
+#| echo: false
+#| warning: false
+#| include: true
+#| label: tbl-reponse1
+#| fig-cap: "Count of the Different Response Time for All Entries"
+#| fig-subcap: ["This shows the values of N/A corrected to NA and then the total count of all reponse types."]
+
+airbnb_data_has_reviews <-
+  airbnb_data_has_reviews |>
+  mutate(
+    host_response_time = if_else(
+      host_response_time == "N/A",
+      NA_character_,
+      host_response_time
+    ),
+    host_response_time = factor(host_response_time)
+  )
+
+airbnb_data_has_reviews |>
+  count(host_response_time)
+```
+
+Looking at @tbl-reponse1, now every entry is of one of 5 desired factors, and NA is the correct type. Seeing that there is over 20,000 NAs for host_response time, we can look specifically at those reviews and see if they behave differently. Since the do have values for ratings, we can also look at their distribution as compared with other hosts with an inputted response time, @fig-response2.
+
+```{r}
+#| echo: false
+#| warning: false
+#| include: true
+#| label: fig-response2
+#| fig-cap: "The Review Rating and Accuracy For Hosts Without Response Time"
+#| fig-subcap: ["This displays all the reviews ratings for hosts with NA inputted as a reponse time.", "This displays all entires including NA responses for host reponse time and their corresponding rating."]
+#| layout-ncol: 2
+
+
+airbnb_data_has_reviews |>
+  filter(is.na(host_response_time)) |>
+  ggplot(aes(x = review_scores_rating)) +
+  geom_histogram(binwidth = 1) +
+  theme_classic() +
+  labs(
+    x = "Average review score",
+    y = "Number of properties"
+  )
+
+airbnb_data_has_reviews |>
+  ggplot(aes(
+    x = host_response_time,
+    y = review_scores_accuracy
+  )) +
+  geom_miss_point() +
+  labs(
+    x = "Host response time",
+    y = "Review score accuracy",
+    color = "Is missing?"
+  ) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+Next we can look at the number of properties a host with listed response times owns. In this case more than 30,000 hosts have only one listing, and keep in mind we lost almost 25% due to no reponse time [@fig-totallisting1]. There seems to be nothing wrong with the distribution of those with more than one listing.
+
+```{r}
+#| echo: false
+#| warning: false
+#| include: true
+#| label: fig-totallisting1
+#| fig-cap: "Total Number of Lisitings and Hosts"
+#| fig-subcap: ["This displays distribution of hosts with any number of listigs.", "This displays the hosts with strictly more than 5 listings."]
+#| layout-ncol: 2
+
+airbnb_data_selected |>
+  filter(!is.na(host_response_time)) |>
+  ggplot(aes(x = host_total_listings_count)) +
+  geom_histogram(bins = 30) +
+  scale_x_log10() +
+  labs(
+    x = "Total number of listings, by host",
+    y = "Number of hosts"
+  )
+
+airbnb_data_selected |>
+  filter(!is.na(host_response_time)) |>
+  filter(host_total_listings_count > 5) |>
+  ggplot(aes(x = host_total_listings_count)) +
+  geom_histogram(bins = 30) +
+  scale_x_log10() +
+  labs(
+    x = "Total number of listings, by host",
+    y = "Number of hosts"
+  )
+```
+
+Lastly, we will try and see if there is any relationship between being a Super Host and other factors, in particular host repose time. I will have to drop listings where the price is above \$1000 in order to be able to look closer at the relationships between these factors [@gig-superhost1]. The remaining listings above \$1000 are outliers and can skew the data is unusal ways.
+
+```{r}
+#| echo: false
+#| warning: false
+#| include: true
+#| label: fig-superhost1
+#| fig-cap: "All Reviews and Superhost Status"
+#| fig-subcap: ["This displays teh distribution of price and review rating while denoting the status of the host being a superhost or not. In this figure we only examine lisitngs below $1000."]
+
+airbnb_data_selected |>
+  filter(number_of_reviews > 1 & price < 1000) |>
+  ggplot(aes(x = price, y = review_scores_rating, 
+             color = host_is_superhost)) +
+  geom_point(size = 1, alpha = 0.05) +
+  theme_classic() +
+  labs(
+    x = "Price per night",
+    y = "Average review score",
+    color = "Superhost"
+  ) +
+  scale_color_brewer(palette = "Set1")
+```
+
+Here we see there is a much smaller proportion of Superhosts to hosts. The superhosts are concentrated near the 5.0 score. The small amount of blue compared to red is the proportion of Superhosts - we can see this exact proportionin @tbl-superhost2. Further with @tbl-superhost3 we can look to see if there is a closer relationship between Superhost status and reponse time.
+
+```{r}
+#| echo: false
+#| warning: false
+#| include: true
+#| label: fig-superhost2
+#| fig-cap: "Proprtion of Superhosts"
+#| fig-subcap: ["This shows that only 16% of hosts with a listed host status are super hosts."]
+
+airbnb_data_no_superhost_nas |>
+  count(host_is_superhost) |>
+  mutate(
+    proportion = n / sum(n),
+    proportion = round(proportion, digits = 2)
+  )
+```
+
+```{r}
+#| echo: false
+#| warning: false
+#| include: true
+#| label: tbl-superhost3
+#| fig-cap: "Proprtion of Superhosts by Reponse Time"
+#| fig-subcap: ["This shows that 68% of superhosts repond within an hour."]
+
+airbnb_data_has_reviews |>
+  filter(!is.na(host_response_time)) |>
+  tabyl(host_response_time, host_is_superhost) |>
+  adorn_percentages("col") |>
+  adorn_pct_formatting(digits = 0) |>
+  adorn_ns() |>
+  adorn_title()
+```
+
+The final part fo this EDA and looking for a relationship between Superhost status and response time, we can produce a linear model.
+
+```{r}
+#| echo: false
+#| warning: false
+#| include: true
+#| label: tbl-model
+#| fig-cap: "A Generalized Linear Model Regressing Superhost Status Against Repnse Time and Review Rating"
+
+airbnb_last <- airbnb_data_has_reviews |>
+  filter(!is.na(host_response_time))
+
+logistic_reg_superhost_response_review <-
+  glm(
+    host_is_superhost ~
+      host_response_time +
+      review_scores_rating,
+    data = airbnb_last,
+    family = binomial
+  )
+
+modelsummary(logistic_reg_superhost_response_review)
+```
