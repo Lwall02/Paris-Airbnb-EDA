@@ -130,7 +130,11 @@ Now we will look at the date range and see how many rows have a value.
 #| warning: false
 #| include: true
 #| label: tbl-dates
-#| fig-cap: "Number of Dates as NA"
+#| tbl-cap: "Number of Dates as NA"
+
+airbnb_data_dates <- 
+  airbnb_data |>
+  filter(!is.na(first_review))
 
 airbnb_data_dates <- 
   airbnb_data |>
@@ -159,8 +163,8 @@ Now we will examine the super host status. We can see there are 90 rows with a v
 #| warning: false
 #| include: true
 #| label: tbl-superhost1
-#| fig-cap: "All Listings Where Superhost is Correctly Inputted"
-#| fig-subcap: ["The last column displays a binary varibale, 0/1 for not Superhost or Superhost. There are 74,239 entries here."]
+#| tbl-cap: "All Listings Where Superhost is Correctly Inputted"
+#| tbl-subcap: ["The last column displays a binary varibale, 0/1 for not Superhost or Superhost. There are 74,239 entries here."]
 
 number_na_superhost <- airbnb_data_selected |>
   filter(!is.na(host_is_superhost)) |>
@@ -183,7 +187,7 @@ In order to further examine the reviews for the listed Airbnb's we will have to 
 #| echo: false
 #| warning: false
 #| include: true
-#| label: tbl-review1
+#| label: fig-review1
 #| fig-cap: "The Review Rating For All Entries With Reviews"
 #| fig-subcap: ["This displays all the reviews from 0.0 to 5.0 of the listings with reviews. There are roughly 25% of the entries without reviews missing."]
 
@@ -200,7 +204,7 @@ airbnb_data_has_reviews |>
     y = "Number of properties"
   )
 ```
-Upon looking at those listings with reviews in @tbl-review1, a very large portion of the reviews fall into the high 4's and 5.0 ratings.
+Upon looking at those listings with reviews in @fig-review1, a very large portion of the reviews fall into the high 4's and 5.0 ratings.
 
 We may be also interested in the relationship between being a super host and other factors. Perhaps response time plays a large role so we look at this closer. First we notice the more than 20,000 NAs are incorrectly inputted as N/A which R does not recognize.
 
@@ -209,8 +213,8 @@ We may be also interested in the relationship between being a super host and oth
 #| warning: false
 #| include: true
 #| label: tbl-reponse1
-#| fig-cap: "Count of the Different Response Time for All Entries"
-#| fig-subcap: ["This shows the values of N/A corrected to NA and then the total count of all reponse types."]
+#| tbl-cap: "Count of the Different Response Time for All Entries"
+#| tbl-subcap: ["This shows the values of N/A corrected to NA and then the total count of all reponse types."]
 
 airbnb_data_has_reviews <-
   airbnb_data_has_reviews |>
@@ -326,9 +330,9 @@ Here we see there is a much smaller proportion of Superhosts to hosts. The super
 #| echo: false
 #| warning: false
 #| include: true
-#| label: fig-superhost2
-#| fig-cap: "Proprtion of Superhosts"
-#| fig-subcap: ["This shows that only 16% of hosts with a listed host status are super hosts."]
+#| label: tbl-superhost2
+#| tbl-cap: "Proprtion of Superhosts"
+#| tbl-subcap: ["This shows that only 16% of hosts with a listed host status are super hosts."]
 
 airbnb_data_no_superhost_nas |>
   count(host_is_superhost) |>
@@ -343,8 +347,8 @@ airbnb_data_no_superhost_nas |>
 #| warning: false
 #| include: true
 #| label: tbl-superhost3
-#| fig-cap: "Proprtion of Superhosts by Reponse Time"
-#| fig-subcap: ["This shows that 68% of superhosts repond within an hour."]
+#| tbl-cap: "Proprtion of Superhosts by Reponse Time"
+#| tbl-subcap: ["This shows that 68% of superhosts repond within an hour."]
 
 airbnb_data_has_reviews |>
   filter(!is.na(host_response_time)) |>
@@ -362,7 +366,7 @@ The final part fo this EDA and looking for a relationship between Superhost stat
 #| warning: false
 #| include: true
 #| label: tbl-model
-#| fig-cap: "A Generalized Linear Model Regressing Superhost Status Against Repnse Time and Review Rating"
+#| tbl-cap: "A Generalized Linear Model Regressing Superhost Status Against Repnse Time and Review Rating"
 
 airbnb_last <- airbnb_data_has_reviews |>
   filter(!is.na(host_response_time))

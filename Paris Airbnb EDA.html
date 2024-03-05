@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Paris Airbnb EDA</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="Paris Airbnb EDA_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Paris Airbnb EDA_files/libs/quarto-html/quarto.js"></script>
+<script src="Paris Airbnb EDA_files/libs/quarto-html/popper.min.js"></script>
+<script src="Paris Airbnb EDA_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Paris Airbnb EDA_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Paris Airbnb EDA_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Paris Airbnb EDA_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Paris Airbnb EDA_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Paris Airbnb EDA_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Paris Airbnb EDA_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+<script src="Paris Airbnb EDA_files/libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="Paris Airbnb EDA_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Paris Airbnb EDA</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>This is a Quarto document exploring information on the Airbnb’s in Paris, France. The code in this document uses R programming and uses considerable amounts of advice and code suggestions from the ‘Telling Stories With Data’ by Rohan Alexander.</p>
+</section>
+<section id="paris-airbnb-eda" class="level2">
+<h2 class="anchored" data-anchor-id="paris-airbnb-eda">Paris Airbnb EDA</h2>
+<p>First we need to download the data. We do this from http://insideairbnb.com/, “Data,” “Get the Data,” and scrolling down to Paris. I use the “Detailed Listings data” data set saved as a link.</p>
+<p>First we notice the prices were incorrectly determined to be characters and turn them into numbers. Next, we can examine the distribution of the price.</p>
+<div id="fig-pricedist" class="cell quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-pricedist-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Paris-Airbnb-EDA_files/figure-html/fig-pricedist-1.png" class="img-fluid figure-img" data-ref-parent="fig-pricedist" width="672"></p>
+<figcaption class="figure-caption">(a) Distribution of untouched prices</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-pricedist-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Paris-Airbnb-EDA_files/figure-html/fig-pricedist-2.png" class="img-fluid figure-img" data-ref-parent="fig-pricedist" width="672"></p>
+<figcaption class="figure-caption">(b) Same distribution using the</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;1: Distribution of the Paris Airbnb Prices</figcaption><p></p>
+</figure>
+</div>
+<div id="fig-pricedist2" class="cell quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-pricedist2-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Paris-Airbnb-EDA_files/figure-html/fig-pricedist2-1.png" class="img-fluid figure-img" data-ref-parent="fig-pricedist2" width="672"></p>
+<figcaption class="figure-caption">(a) Distribution of prices under $1000</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-pricedist2-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Paris-Airbnb-EDA_files/figure-html/fig-pricedist2-2.png" class="img-fluid figure-img" data-ref-parent="fig-pricedist2" width="672"></p>
+<figcaption class="figure-caption">(b) A closer look at the prices between $90 and $210 showing the groupiing of common price tactics.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;2: Distribution of the Paris Airbnb Prices under $1000</figcaption><p></p>
+</figure>
+</div>
+<p>As we can the distribution of prices, <a href="#fig-pricedist">Figure&nbsp;1</a>, is similar to what we would expect of this type of data set. We can see over all the entries, a very large portion of the prices are below $1000 with some outliers going up to around $80000. As we look closer the distribution of prices, below $1000 in <strong>?@fig-distprice2</strong>, they fall into a normally, right-skewed distribution. Further, the prices display a peak around the prices ending in zero and five. This is representative of normal grouping of prices based in order to attract customers.</p>
+<p>Now we will look at the date range and see how many rows have a value.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-dates" class="anchored">
+<table class="table table-sm table-striped small">
+<caption>Table&nbsp;1: Number of Dates as NA</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Number of Dates Inputted as NA</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">17891</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>This data set spans over 14 years from first listed review in May of 2009 to the last listed review in December in 2023. Unfortunately, there is 17,891 <a href="#tbl-dates">Table&nbsp;1</a> entries with NA for any variable of a date type, which is almost 25% of the entire data set.</p>
+<p>Now we will examine the super host status. We can see there are 90 rows with a value of NA for reviews variables, whereas the rest are correctly inputted as Boolean values. This is almost nothing compared to the 74,329 entries. Further, we can add a column where instead of TRUE/FALSE we have 0/1. Now we have only rows where there is information about super host status, <strong>?@tbl-superhost1</strong>.</p>
+<div id="tbl-superhost1" class="cell tbl-parent quarto-layout-panel anchored" data-tbl-cap="All Listings Where Superhost is Correctly Inputted" data-tbl-subcap="The last column displays a binary varibale, 0/1 for not Superhost or Superhost. There are 74,239 entries here.">
+<div class="panel-caption table-caption">
+<p><strong>?(caption)</strong></p>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output cell-output-stdout quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<pre><code># A tibble: 6 × 13
+  host_id host_response_time host_is_superhost host_total_listings_count
+    &lt;dbl&gt; &lt;chr&gt;              &lt;lgl&gt;                                 &lt;dbl&gt;
+1    3631 within a few hours FALSE                                     2
+2    7903 within an hour     FALSE                                     3
+3  439130 within a few hours FALSE                                     1
+4    2626 within an hour     TRUE                                      9
+5   22155 N/A                FALSE                                     1
+6  429406 within a day       FALSE                                     5
+# ℹ 9 more variables: neighbourhood_cleansed &lt;chr&gt;, bathrooms &lt;lgl&gt;,
+#   bedrooms &lt;dbl&gt;, price &lt;int&gt;, number_of_reviews &lt;dbl&gt;,
+#   review_scores_rating &lt;dbl&gt;, review_scores_accuracy &lt;dbl&gt;,
+#   review_scores_value &lt;dbl&gt;, host_is_superhost_binary &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</div>
+<p>In order to further examine the reviews for the listed Airbnb’s we will have to ignore those reviews with NA entries. Those rows with no entries in the first_review or last_review also have no entries for any review variables. This means to examine the reviews of the listings we would have to ignore close to 25% of the entries since they are listed as NA under any review variable.</p>
+<div id="fig-review1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<div class="cell-output-display">
+<div id="fig-review1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Paris-Airbnb-EDA_files/figure-html/fig-review1-1.png" class="img-fluid figure-img" data-ref-parent="fig-review1" width="672"></p>
+<figcaption class="figure-caption">(a) This displays all the reviews from 0.0 to 5.0 of the listings with reviews. There are roughly 25% of the entries without reviews missing.</figcaption>
+</figure>
+</div>
+</div>
+<figcaption class="figure-caption">Figure&nbsp;3: The Review Rating For All Entries With Reviews</figcaption>
+</figure>
+</div>
+<p>Upon looking at those listings with reviews in <a href="#fig-review1">Figure&nbsp;3</a>, a very large portion of the reviews fall into the high 4’s and 5.0 ratings.</p>
+<p>We may be also interested in the relationship between being a super host and other factors. Perhaps response time plays a large role so we look at this closer. First we notice the more than 20,000 NAs are incorrectly inputted as N/A which R does not recognize.</p>
+<div id="tbl-reponse1" class="cell tbl-parent quarto-layout-panel anchored" data-tbl-cap="Count of the Different Response Time for All Entries" data-tbl-subcap="This shows the values of N/A corrected to NA and then the total count of all reponse types.">
+<div class="panel-caption table-caption">
+<p><strong>?(caption)</strong></p>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output cell-output-stdout quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<pre><code># A tibble: 5 × 2
+  host_response_time     n
+  &lt;fct&gt;              &lt;int&gt;
+1 a few days or more  1269
+2 within a day        5371
+3 within a few hours  6909
+4 within an hour     22538
+5 &lt;NA&gt;               20362</code></pre>
+</div>
+</div>
+</div>
+<p>Looking at <strong>?@tbl-reponse1</strong>, now every entry is of one of 5 desired factors, and NA is the correct type. Seeing that there is over 20,000 NAs for host_response time, we can look specifically at those reviews and see if they behave differently. Since the do have values for ratings, we can also look at their distribution as compared with other hosts with an inputted response time, <a href="#fig-response2">Figure&nbsp;4</a>.</p>
+<div id="fig-response2" class="cell quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-response2-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Paris-Airbnb-EDA_files/figure-html/fig-response2-1.png" class="img-fluid figure-img" data-ref-parent="fig-response2" width="672"></p>
+<figcaption class="figure-caption">(a) This displays all the reviews ratings for hosts with NA inputted as a reponse time.</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-response2-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Paris-Airbnb-EDA_files/figure-html/fig-response2-2.png" class="img-fluid figure-img" data-ref-parent="fig-response2" width="672"></p>
+<figcaption class="figure-caption">(b) This displays all entires including NA responses for host reponse time and their corresponding rating.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;4: The Review Rating and Accuracy For Hosts Without Response Time</figcaption><p></p>
+</figure>
+</div>
+<p>Next we can look at the number of properties a host with listed response times owns. In this case more than 30,000 hosts have only one listing, and keep in mind we lost almost 25% due to no reponse time <a href="#fig-totallisting1">Figure&nbsp;5</a>. There seems to be nothing wrong with the distribution of those with more than one listing.</p>
+<div id="fig-totallisting1" class="cell quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-totallisting1-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Paris-Airbnb-EDA_files/figure-html/fig-totallisting1-1.png" class="img-fluid figure-img" data-ref-parent="fig-totallisting1" width="672"></p>
+<figcaption class="figure-caption">(a) This displays distribution of hosts with any number of listigs.</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-totallisting1-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Paris-Airbnb-EDA_files/figure-html/fig-totallisting1-2.png" class="img-fluid figure-img" data-ref-parent="fig-totallisting1" width="672"></p>
+<figcaption class="figure-caption">(b) This displays the hosts with strictly more than 5 listings.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure&nbsp;5: Total Number of Lisitings and Hosts</figcaption><p></p>
+</figure>
+</div>
+<p>Lastly, we will try and see if there is any relationship between being a Super Host and other factors, in particular host repose time. I will have to drop listings where the price is above $1000 in order to be able to look closer at the relationships between these factors <span class="citation" data-cites="gig-superhost1">[@gig-superhost1]</span>. The remaining listings above $1000 are outliers and can skew the data is unusal ways.</p>
+<div id="fig-superhost1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<div class="cell-output-display">
+<div id="fig-superhost1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Paris-Airbnb-EDA_files/figure-html/fig-superhost1-1.png" class="img-fluid figure-img" data-ref-parent="fig-superhost1" width="672"></p>
+<figcaption class="figure-caption">(a) This displays teh distribution of price and review rating while denoting the status of the host being a superhost or not. In this figure we only examine lisitngs below $1000.</figcaption>
+</figure>
+</div>
+</div>
+<figcaption class="figure-caption">Figure&nbsp;6: All Reviews and Superhost Status</figcaption>
+</figure>
+</div>
+<p>Here we see there is a much smaller proportion of Superhosts to hosts. The superhosts are concentrated near the 5.0 score. The small amount of blue compared to red is the proportion of Superhosts - we can see this exact proportionin <strong>?@tbl-superhost2</strong>. Further with <strong>?@tbl-superhost3</strong> we can look to see if there is a closer relationship between Superhost status and reponse time.</p>
+<div id="tbl-superhost2" class="cell tbl-parent quarto-layout-panel anchored" data-tbl-cap="Proprtion of Superhosts" data-tbl-subcap="This shows that only 16% of hosts with a listed host status are super hosts.">
+<div class="panel-caption table-caption">
+<p><strong>?(caption)</strong></p>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output cell-output-stdout quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<pre><code># A tibble: 2 × 3
+  host_is_superhost     n proportion
+  &lt;lgl&gt;             &lt;int&gt;      &lt;dbl&gt;
+1 FALSE             62570       0.84
+2 TRUE              11669       0.16</code></pre>
+</div>
+</div>
+</div>
+<div id="tbl-superhost3" class="cell tbl-parent quarto-layout-panel anchored" data-tbl-cap="Proprtion of Superhosts by Reponse Time" data-tbl-subcap="This shows that 68% of superhosts repond within an hour.">
+<div class="panel-caption table-caption">
+<p><strong>?(caption)</strong></p>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output cell-output-stdout quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<pre><code>                    host_is_superhost            
+ host_response_time             FALSE        TRUE
+ a few days or more       5%  (1,245)  0%    (24)
+       within a day      17%  (4,386) 10%   (985)
+ within a few hours      18%  (4,724) 22% (2,185)
+     within an hour      60% (15,688) 68% (6,850)</code></pre>
+</div>
+</div>
+</div>
+<p>The final part fo this EDA and looking for a relationship between Superhost status and response time, we can produce a linear model.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-model" class="anchored">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Table&nbsp;2: A Generalized Linear Model Regressing Superhost Status Against Repnse Time and Review Rating</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">&nbsp;(1)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: center;">−18.322</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: center;">(0.375)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">host_response_timewithin a day</td>
+<td style="text-align: center;">2.304</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: center;">(0.210)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">host_response_timewithin a few hours</td>
+<td style="text-align: center;">3.039</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: center;">(0.209)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">host_response_timewithin an hour</td>
+<td style="text-align: center;">3.202</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: center;">(0.208)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">review_scores_rating</td>
+<td style="text-align: center;">3.003</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; box-shadow: 0px 1.5px;"></td>
+<td style="text-align: center; box-shadow: 0px 1.5px;">(0.064)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Num.Obs.</td>
+<td style="text-align: center;">36087</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">AIC</td>
+<td style="text-align: center;">38273.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BIC</td>
+<td style="text-align: center;">38316.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Log.Lik.</td>
+<td style="text-align: center;">−19131.922</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RMSE</td>
+<td style="text-align: center;">0.42</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
