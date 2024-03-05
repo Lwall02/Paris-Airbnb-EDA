@@ -2,6 +2,8 @@
 title: "Paris Airbnb EDA"
 format: html
 editor: visual
+author: "Liam Wall"
+date: today
 ---
 
 ## Introduction
@@ -122,7 +124,7 @@ airbnb_data_selected |>
 
 ```
 
-As we can the distribution of prices, @fig-pricedist, is similar to what we would expect of this type of data set. We can see over all the entries, a very large portion of the prices are below \$1000 with some outliers going up to around \$80000. As we look closer the distribution of prices, below \$1000 in @fig-distprice2, they fall into a normally, right-skewed distribution. Further, the prices display a peak around the prices ending in zero and five. This is representative of normal grouping of prices based in order to attract customers.
+As we can the distribution of prices, @fig-pricedist, is similar to what we would expect of this type of data set. We can see over all the entries, a very large portion of the prices are below \$1000 with some outliers going up to around \$80000. As we look closer the distribution of prices, below \$1000 in @fig-pricedist2, they fall into a normally, right-skewed distribution. Further, the prices display a peak around the prices ending in zero and five. This is representative of normal grouping of prices based in order to attract customers.
 
 Now we will look at the date range and see how many rows have a value.
 ```{r}
@@ -156,15 +158,16 @@ airbnb_data |>
 ```
 This data set spans over 14 years from first listed review in May of 2009 to the last listed review in December in 2023. Unfortunately, there is 17,891 [@tbl-dates] entries with NA for any variable of a date type, which is almost 25% of the entire data set.
 
-Now we will examine the super host status. We can see there are 90 rows with a value of NA for reviews variables, whereas the rest are correctly inputted as Boolean values. This is almost nothing compared to the 74,329 entries. Further, we can add a column where instead of TRUE/FALSE we have 0/1. Now we have only rows where there is information about super host status, @tbl-superhost1.
+Now we will examine the super host status. We can see there are 90 rows with a value of NA for reviews variables, whereas the rest are correctly inputted as Boolean values. This is almost nothing compared to the 74,329 entries. Further, we can add a column where instead of TRUE/FALSE we have 0/1. 
 
 ```{r}
 #| echo: false
 #| warning: false
 #| include: true
-#| label: tbl-superhost1
+#| label: tbl-superhost
 #| tbl-cap: "All Listings Where Superhost is Correctly Inputted"
 #| tbl-subcap: ["The last column displays a binary varibale, 0/1 for not Superhost or Superhost. There are 74,239 entries here."]
+
 
 number_na_superhost <- airbnb_data_selected |>
   filter(!is.na(host_is_superhost)) |>
@@ -179,8 +182,11 @@ airbnb_data_no_superhost_nas <-
   )
 
 airbnb_data_no_superhost_nas |>
-  head()
+  head() |> 
+  select(host_id, host_is_superhost, host_is_superhost_binary) |>
+  kable()
 ```
+Now we have only rows where there is information about super host status, @tbl-superhost.
 
 In order to further examine the reviews for the listed Airbnb's we will have to ignore those reviews with NA entries. Those rows with no entries in the first_review or last_review also have no entries for any review variables. This means to examine the reviews of the listings we would have to ignore close to 25% of the entries since they are listed as NA under any review variable.
 ```{r}
@@ -212,7 +218,7 @@ We may be also interested in the relationship between being a super host and oth
 #| echo: false
 #| warning: false
 #| include: true
-#| label: tbl-reponse1
+#| label: tbl-response1
 #| tbl-cap: "Count of the Different Response Time for All Entries"
 #| tbl-subcap: ["This shows the values of N/A corrected to NA and then the total count of all reponse types."]
 
@@ -228,10 +234,11 @@ airbnb_data_has_reviews <-
   )
 
 airbnb_data_has_reviews |>
-  count(host_response_time)
+  count(host_response_time) |>
+  kable()
 ```
 
-Looking at @tbl-reponse1, now every entry is of one of 5 desired factors, and NA is the correct type. Seeing that there is over 20,000 NAs for host_response time, we can look specifically at those reviews and see if they behave differently. Since the do have values for ratings, we can also look at their distribution as compared with other hosts with an inputted response time, @fig-response2.
+Looking at @tbl-response1, now every entry is of one of 5 desired factors, and NA is the correct type. Seeing that there is over 20,000 NAs for host_response time, we can look specifically at those reviews and see if they behave differently. Since the do have values for ratings, we can also look at their distribution as compared with other hosts with an inputted response time, @fig-response2.
 
 ```{r}
 #| echo: false
@@ -300,7 +307,7 @@ airbnb_data_selected |>
   )
 ```
 
-Lastly, we will try and see if there is any relationship between being a Super Host and other factors, in particular host repose time. I will have to drop listings where the price is above \$1000 in order to be able to look closer at the relationships between these factors [@gig-superhost1]. The remaining listings above \$1000 are outliers and can skew the data is unusal ways.
+Lastly, we will try and see if there is any relationship between being a Super Host and other factors, in particular host repose time. I will have to drop listings where the price is above \$1000 in order to be able to look closer at the relationships between these factors [@fig-superhost1]. The remaining listings above \$1000 are outliers and can skew the data is unusal ways.
 
 ```{r}
 #| echo: false
@@ -339,7 +346,8 @@ airbnb_data_no_superhost_nas |>
   mutate(
     proportion = n / sum(n),
     proportion = round(proportion, digits = 2)
-  )
+  ) |>
+  kable()
 ```
 
 ```{r}
@@ -356,10 +364,11 @@ airbnb_data_has_reviews |>
   adorn_percentages("col") |>
   adorn_pct_formatting(digits = 0) |>
   adorn_ns() |>
-  adorn_title()
+  adorn_title() |>
+  kable()
 ```
 
-The final part fo this EDA and looking for a relationship between Superhost status and response time, we can produce a linear model.
+The final part fo this EDA and looking for a relationship between Superhost status and response time, we can produce a linear model, @tbl-model.
 
 ```{r}
 #| echo: false

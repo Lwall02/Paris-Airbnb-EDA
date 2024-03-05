@@ -6,6 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Liam Wall">
+<meta name="dcterms.date" content="2024-03-05">
 
 <title>Paris Airbnb EDA</title>
 <style>
@@ -55,7 +57,19 @@ ul.task-list li input[type="checkbox"] {
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Liam Wall </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 5, 2024</p>
+    </div>
+  </div>
   
     
   </div>
@@ -117,7 +131,7 @@ ul.task-list li input[type="checkbox"] {
 <p></p><figcaption class="figure-caption">Figure&nbsp;2: Distribution of the Paris Airbnb Prices under $1000</figcaption><p></p>
 </figure>
 </div>
-<p>As we can the distribution of prices, <a href="#fig-pricedist">Figure&nbsp;1</a>, is similar to what we would expect of this type of data set. We can see over all the entries, a very large portion of the prices are below $1000 with some outliers going up to around $80000. As we look closer the distribution of prices, below $1000 in <strong>?@fig-distprice2</strong>, they fall into a normally, right-skewed distribution. Further, the prices display a peak around the prices ending in zero and five. This is representative of normal grouping of prices based in order to attract customers.</p>
+<p>As we can the distribution of prices, <a href="#fig-pricedist">Figure&nbsp;1</a>, is similar to what we would expect of this type of data set. We can see over all the entries, a very large portion of the prices are below $1000 with some outliers going up to around $80000. As we look closer the distribution of prices, below $1000 in <a href="#fig-pricedist2">Figure&nbsp;2</a>, they fall into a normally, right-skewed distribution. Further, the prices display a peak around the prices ending in zero and five. This is representative of normal grouping of prices based in order to attract customers.</p>
 <p>Now we will look at the date range and see how many rows have a value.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -139,29 +153,59 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <p>This data set spans over 14 years from first listed review in May of 2009 to the last listed review in December in 2023. Unfortunately, there is 17,891 <a href="#tbl-dates">Table&nbsp;1</a> entries with NA for any variable of a date type, which is almost 25% of the entire data set.</p>
-<p>Now we will examine the super host status. We can see there are 90 rows with a value of NA for reviews variables, whereas the rest are correctly inputted as Boolean values. This is almost nothing compared to the 74,329 entries. Further, we can add a column where instead of TRUE/FALSE we have 0/1. Now we have only rows where there is information about super host status, <strong>?@tbl-superhost1</strong>.</p>
-<div id="tbl-superhost1" class="cell tbl-parent quarto-layout-panel anchored" data-tbl-cap="All Listings Where Superhost is Correctly Inputted" data-tbl-subcap="The last column displays a binary varibale, 0/1 for not Superhost or Superhost. There are 74,239 entries here.">
+<p>Now we will examine the super host status. We can see there are 90 rows with a value of NA for reviews variables, whereas the rest are correctly inputted as Boolean values. This is almost nothing compared to the 74,329 entries. Further, we can add a column where instead of TRUE/FALSE we have 0/1.</p>
+<div id="tbl-superhost" class="cell tbl-parent quarto-layout-panel anchored">
 <div class="panel-caption table-caption">
-<p><strong>?(caption)</strong></p>
+<p>Table&nbsp;2: All Listings Where Superhost is Correctly Inputted</p>
 </div>
 <div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output cell-output-stdout quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
-<pre><code># A tibble: 6 × 13
-  host_id host_response_time host_is_superhost host_total_listings_count
-    &lt;dbl&gt; &lt;chr&gt;              &lt;lgl&gt;                                 &lt;dbl&gt;
-1    3631 within a few hours FALSE                                     2
-2    7903 within an hour     FALSE                                     3
-3  439130 within a few hours FALSE                                     1
-4    2626 within an hour     TRUE                                      9
-5   22155 N/A                FALSE                                     1
-6  429406 within a day       FALSE                                     5
-# ℹ 9 more variables: neighbourhood_cleansed &lt;chr&gt;, bathrooms &lt;lgl&gt;,
-#   bedrooms &lt;dbl&gt;, price &lt;int&gt;, number_of_reviews &lt;dbl&gt;,
-#   review_scores_rating &lt;dbl&gt;, review_scores_accuracy &lt;dbl&gt;,
-#   review_scores_value &lt;dbl&gt;, host_is_superhost_binary &lt;dbl&gt;</code></pre>
+<div id="tbl-superhost-1" class="quarto-layout-cell quarto-layout-cell-subref anchored" data-ref-parent="tbl-superhost" style="flex-basis: 100.0%;justify-content: center;">
+<table class="table table-sm table-striped small">
+<caption>(a) The last column displays a binary varibale, 0/1 for not Superhost or Superhost. There are 74,239 entries here.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">host_id</th>
+<th style="text-align: left;">host_is_superhost</th>
+<th style="text-align: right;">host_is_superhost_binary</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">3631</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">7903</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">439130</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2626</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">22155</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">429406</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
+<p>Now we have only rows where there is information about super host status, <a href="#tbl-superhost">Table&nbsp;2</a>.</p>
 <p>In order to further examine the reviews for the listed Airbnb’s we will have to ignore those reviews with NA entries. Those rows with no entries in the first_review or last_review also have no entries for any review variables. This means to examine the reviews of the listings we would have to ignore close to 25% of the entries since they are listed as NA under any review variable.</p>
 <div id="fig-review1" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
@@ -178,24 +222,47 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <p>Upon looking at those listings with reviews in <a href="#fig-review1">Figure&nbsp;3</a>, a very large portion of the reviews fall into the high 4’s and 5.0 ratings.</p>
 <p>We may be also interested in the relationship between being a super host and other factors. Perhaps response time plays a large role so we look at this closer. First we notice the more than 20,000 NAs are incorrectly inputted as N/A which R does not recognize.</p>
-<div id="tbl-reponse1" class="cell tbl-parent quarto-layout-panel anchored" data-tbl-cap="Count of the Different Response Time for All Entries" data-tbl-subcap="This shows the values of N/A corrected to NA and then the total count of all reponse types.">
+<div id="tbl-response1" class="cell tbl-parent quarto-layout-panel anchored">
 <div class="panel-caption table-caption">
-<p><strong>?(caption)</strong></p>
+<p>Table&nbsp;3: Count of the Different Response Time for All Entries</p>
 </div>
 <div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output cell-output-stdout quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
-<pre><code># A tibble: 5 × 2
-  host_response_time     n
-  &lt;fct&gt;              &lt;int&gt;
-1 a few days or more  1269
-2 within a day        5371
-3 within a few hours  6909
-4 within an hour     22538
-5 &lt;NA&gt;               20362</code></pre>
+<div id="tbl-response1-1" class="quarto-layout-cell quarto-layout-cell-subref anchored" data-ref-parent="tbl-response1" style="flex-basis: 100.0%;justify-content: center;">
+<table class="table table-sm table-striped small">
+<caption>(a) This shows the values of N/A corrected to NA and then the total count of all reponse types.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">host_response_time</th>
+<th style="text-align: right;">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">a few days or more</td>
+<td style="text-align: right;">1269</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">within a day</td>
+<td style="text-align: right;">5371</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">within a few hours</td>
+<td style="text-align: right;">6909</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">within an hour</td>
+<td style="text-align: right;">22538</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">20362</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
-<p>Looking at <strong>?@tbl-reponse1</strong>, now every entry is of one of 5 desired factors, and NA is the correct type. Seeing that there is over 20,000 NAs for host_response time, we can look specifically at those reviews and see if they behave differently. Since the do have values for ratings, we can also look at their distribution as compared with other hosts with an inputted response time, <a href="#fig-response2">Figure&nbsp;4</a>.</p>
+<p>Looking at <a href="#tbl-response1">Table&nbsp;3</a>, now every entry is of one of 5 desired factors, and NA is the correct type. Seeing that there is over 20,000 NAs for host_response time, we can look specifically at those reviews and see if they behave differently. Since the do have values for ratings, we can also look at their distribution as compared with other hosts with an inputted response time, <a href="#fig-response2">Figure&nbsp;4</a>.</p>
 <div id="fig-response2" class="cell quarto-layout-panel">
 <figure class="figure">
 <div class="quarto-layout-row quarto-layout-valign-top">
@@ -243,7 +310,7 @@ ul.task-list li input[type="checkbox"] {
 <p></p><figcaption class="figure-caption">Figure&nbsp;5: Total Number of Lisitings and Hosts</figcaption><p></p>
 </figure>
 </div>
-<p>Lastly, we will try and see if there is any relationship between being a Super Host and other factors, in particular host repose time. I will have to drop listings where the price is above $1000 in order to be able to look closer at the relationships between these factors <span class="citation" data-cites="gig-superhost1">[@gig-superhost1]</span>. The remaining listings above $1000 are outliers and can skew the data is unusal ways.</p>
+<p>Lastly, we will try and see if there is any relationship between being a Super Host and other factors, in particular host repose time. I will have to drop listings where the price is above $1000 in order to be able to look closer at the relationships between these factors <a href="#fig-superhost1">Figure&nbsp;6</a>. The remaining listings above $1000 are outliers and can skew the data is unusal ways.</p>
 <div id="fig-superhost1" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <div class="cell-output-display">
@@ -257,42 +324,90 @@ ul.task-list li input[type="checkbox"] {
 <figcaption class="figure-caption">Figure&nbsp;6: All Reviews and Superhost Status</figcaption>
 </figure>
 </div>
-<p>Here we see there is a much smaller proportion of Superhosts to hosts. The superhosts are concentrated near the 5.0 score. The small amount of blue compared to red is the proportion of Superhosts - we can see this exact proportionin <strong>?@tbl-superhost2</strong>. Further with <strong>?@tbl-superhost3</strong> we can look to see if there is a closer relationship between Superhost status and reponse time.</p>
-<div id="tbl-superhost2" class="cell tbl-parent quarto-layout-panel anchored" data-tbl-cap="Proprtion of Superhosts" data-tbl-subcap="This shows that only 16% of hosts with a listed host status are super hosts.">
+<p>Here we see there is a much smaller proportion of Superhosts to hosts. The superhosts are concentrated near the 5.0 score. The small amount of blue compared to red is the proportion of Superhosts - we can see this exact proportionin <a href="#tbl-superhost2">Table&nbsp;4</a>. Further with <a href="#tbl-superhost3">Table&nbsp;5</a> we can look to see if there is a closer relationship between Superhost status and reponse time.</p>
+<div id="tbl-superhost2" class="cell tbl-parent quarto-layout-panel anchored">
 <div class="panel-caption table-caption">
-<p><strong>?(caption)</strong></p>
+<p>Table&nbsp;4: Proprtion of Superhosts</p>
 </div>
 <div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output cell-output-stdout quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
-<pre><code># A tibble: 2 × 3
-  host_is_superhost     n proportion
-  &lt;lgl&gt;             &lt;int&gt;      &lt;dbl&gt;
-1 FALSE             62570       0.84
-2 TRUE              11669       0.16</code></pre>
+<div id="tbl-superhost2-1" class="quarto-layout-cell quarto-layout-cell-subref anchored" data-ref-parent="tbl-superhost2" style="flex-basis: 100.0%;justify-content: center;">
+<table class="table table-sm table-striped small">
+<caption>(a) This shows that only 16% of hosts with a listed host status are super hosts.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">host_is_superhost</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">proportion</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">62570</td>
+<td style="text-align: right;">0.84</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">11669</td>
+<td style="text-align: right;">0.16</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
-<div id="tbl-superhost3" class="cell tbl-parent quarto-layout-panel anchored" data-tbl-cap="Proprtion of Superhosts by Reponse Time" data-tbl-subcap="This shows that 68% of superhosts repond within an hour.">
+<div id="tbl-superhost3" class="cell tbl-parent quarto-layout-panel anchored">
 <div class="panel-caption table-caption">
-<p><strong>?(caption)</strong></p>
+<p>Table&nbsp;5: Proprtion of Superhosts by Reponse Time</p>
 </div>
 <div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output cell-output-stdout quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
-<pre><code>                    host_is_superhost            
- host_response_time             FALSE        TRUE
- a few days or more       5%  (1,245)  0%    (24)
-       within a day      17%  (4,386) 10%   (985)
- within a few hours      18%  (4,724) 22% (2,185)
-     within an hour      60% (15,688) 68% (6,850)</code></pre>
+<div id="tbl-superhost3-1" class="quarto-layout-cell quarto-layout-cell-subref anchored" data-ref-parent="tbl-superhost3" style="flex-basis: 100.0%;justify-content: center;">
+<table class="table table-sm table-striped small">
+<caption>(a) This shows that 68% of superhosts repond within an hour.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">host_is_superhost</th>
+<th style="text-align: left;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">host_response_time</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: left;">TRUE</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">a few days or more</td>
+<td style="text-align: left;">5% (1,245)</td>
+<td style="text-align: left;">0% (24)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">within a day</td>
+<td style="text-align: left;">17% (4,386)</td>
+<td style="text-align: left;">10% (985)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">within a few hours</td>
+<td style="text-align: left;">18% (4,724)</td>
+<td style="text-align: left;">22% (2,185)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">within an hour</td>
+<td style="text-align: left;">60% (15,688)</td>
+<td style="text-align: left;">68% (6,850)</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
-<p>The final part fo this EDA and looking for a relationship between Superhost status and response time, we can produce a linear model.</p>
+<p>The final part fo this EDA and looking for a relationship between Superhost status and response time, we can produce a linear model, <a href="#tbl-model">Table&nbsp;6</a>.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="tbl-model" class="anchored">
 <table class="table table-sm table-striped small" data-quarto-postprocess="true">
-<caption>Table&nbsp;2: A Generalized Linear Model Regressing Superhost Status Against Repnse Time and Review Rating</caption>
+<caption>Table&nbsp;6: A Generalized Linear Model Regressing Superhost Status Against Repnse Time and Review Rating</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th"></th>
