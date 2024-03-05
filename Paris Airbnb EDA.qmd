@@ -4,11 +4,13 @@ format: html
 editor: visual
 author: "Liam Wall"
 date: today
+thanks: Code available at https://github.com/Lwall02/Paris-Airbnb-EDA.
+bibliography: references.bib
 ---
 
 ## Introduction
 
-This is a Quarto document exploring information on the Airbnb's in Paris, France. The code in this document uses R programming and uses considerable amounts of advice and code suggestions from the 'Telling Stories With Data' by Rohan Alexander.
+This is a Quarto document exploring information on the Airbnb's in Paris, France. The code in this document uses R programming [@citeR] and the package tidyverse [@tidyverse]. This also uses considerable amounts of advice and code suggestions from the 'Telling Stories With Data' by Rohan Alexander [@citeRohan].
 
 ```{r}
 #| echo: false
@@ -23,7 +25,7 @@ library(kableExtra)
 
 ## Paris Airbnb EDA
 
-First we need to download the data. We do this from http://insideairbnb.com/, "Data," "Get the Data," and scrolling down to Paris. I use the "Detailed Listings data" data set saved as a link.
+First we need to download the data. We do this from http://insideairbnb.com/, "Data," "Get the Data," and scrolling down to Paris. I use the "Detailed Listings data" data set saved as a link [@citeParis].
 
 ```{r}
 #| echo: false
